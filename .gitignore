@@ -1,0 +1,22 @@
+# Build output
+bin/
+obj/
+
+# Experiment artifacts (generated at runtime)
+samples/
+downloads/
+LAB_NOTES_run.txt
+
+# Local secrets — never commit a real client id / token cache
+appsettings.local.json
+*.user
+
+
+# IDE
+.vs/
+.idea/
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
