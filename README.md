@@ -79,13 +79,24 @@ console. Results are printed as a summary table and written to `LAB_NOTES_run.tx
 
 ## Results
 
-> Run the experiment and record your observed values here.
+Run on 2026-06-16 against a personal OneDrive account (`consumers` tenant).
+Full log in [`LAB_NOTES_run.txt`](LAB_NOTES_run.txt).
 
 | File | Type | Size | Hashes Match | Upload (ms) | Download (ms) |
 |---|---|---|---|---|---|
-| small-text.txt | text | ~70 B | _[fill in]_ | _[fill in]_ | _[fill in]_ |
-| small-binary.bin | binary | 1 KB | _[fill in]_ | _[fill in]_ | _[fill in]_ |
-| large-binary.bin | binary | 5 MB | _[fill in]_ | _[fill in]_ | _[fill in]_ |
+| small-text.txt | text | 61 B | ✅ yes | 730 | 1111 |
+| small-binary.bin | binary | 1,024 B | ✅ yes | 684 | 591 |
+| large-binary.bin | binary | 5,242,880 B (5 MB) | ✅ yes | 44,212 | 1,505 |
+
+**3/3 files preserved integrity (bit-for-bit identical).**
+
+The SHA-256 digest of every file was identical before upload and after download,
+for example for `small-text.txt`:
+
+```
+original   : e646d5f945f1c0903ed6d1c5533cbe26cecff3f7714bed75e74833e78e8024a4
+downloaded : e646d5f945f1c0903ed6d1c5533cbe26cecff3f7714bed75e74833e78e8024a4
+```
 
 ---
 
@@ -93,19 +104,38 @@ console. Results are printed as a summary table and written to `LAB_NOTES_run.tx
 
 ### Was the hypothesis confirmed?
 
-_[After running: state whether all SHA-256 hashes matched. The expected result is
-that they do — OneDrive stores file content faithfully, so integrity is preserved
-across upload/download. Record any exceptions you observed.]_
+Yes. All three files — a tiny UTF-8 text file (including ASCII, accented, CJK and
+emoji characters), a 1 KB random binary, and a 5 MB random binary — came back from
+OneDrive with **SHA-256 hashes identical to the originals**. OneDrive preserved the
+content faithfully in every case, including across both Graph upload paths (the
+single-PUT simple upload for the small files and the resumable upload session for
+the 5 MB file). No discrepancies, encoding changes, or content mutation were observed.
+
+The only meaningful difference between files was **timing, not integrity**: the
+5 MB resumable upload took ~44 s, while every small file uploaded in well under a
+second. That cost comes from the upload-session protocol overhead (creating the
+session, then chunked PUTs), not from the file size alone — the 5 MB download, by
+contrast, completed in ~1.5 s. So the size/path difference shows up purely as
+performance, with integrity unaffected.
 
 ### What challenges did you encounter?
 
-- **Authentication setup** — registering the Azure AD app and choosing the right
-  account types and scopes (`Files.ReadWrite`, `User.Read`) was the main setup hurdle.
-- **Personal vs. work accounts** — personal Microsoft accounts authenticate against
-  the `consumers` tenant; using `common` or `organizations` can cause sign-in errors.
-- **Upload size threshold** — the Graph simple-upload limit (4 MB) means larger files
-  need a resumable upload session, handled automatically in `OneDriveService`.
-- _[Add anything specific you hit during your run.]_
+- **The `appsettings.local.json` path didn't actually work.** Both `SETUP.md` and
+  `.gitignore` treat `appsettings.local.json` as the place to keep the client ID,
+  but the original `LoadSettings()` only read `appsettings.json` and `ONEDRIVE_`
+  environment variables. I had to add that file to the configuration builder *and*
+  copy it to the build output directory before the documented workflow worked.
+- **Build/runtime mismatch** — the project targets .NET 8 (LTS), but only newer
+  runtimes were installed locally, so the app wouldn't launch until I added
+  `<RollForward>LatestMajor</RollForward>`. `config.Bind` also needed the
+  `Microsoft.Extensions.Configuration.Binder` package, which wasn't referenced.
+- **Device-code sign-in** — the code has to be entered at
+  `microsoft.com/devicelogin`, not the general account page, and only one instance
+  of the app should be running at a time (two concurrent runs issue two competing
+  codes, which is confusing). Personal accounts must use the `consumers` tenant;
+  `common`/`organizations` can cause sign-in errors.
+- **Upload size threshold** — the Graph simple-upload limit (4 MB) means larger
+  files need a resumable upload session, handled automatically in `OneDriveService`.
 
 ### What future experiments would you suggest?
 
