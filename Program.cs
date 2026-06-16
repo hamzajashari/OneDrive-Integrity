@@ -58,6 +58,8 @@ public static class Program
         var config = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: true)
+            // Local secrets (gitignored) override the committed defaults.
+            .AddJsonFile("appsettings.local.json", optional: true)
             // Environment variables override file values, e.g. ONEDRIVE_CLIENT_ID.
             .AddEnvironmentVariables(prefix: "ONEDRIVE_")
             .Build();
