@@ -1,0 +1,63 @@
+
+============================================================
+  OneDrive File Integrity Experiment
+============================================================
+[2026-06-16 20:16:56.050] INFO    No file argument supplied. Generating sample set in 'samples'.
+[2026-06-16 20:16:56.080] STEP    Initialising Microsoft Graph client (device code flow).
+[2026-06-16 20:16:56.165] OK      Graph client created. Awaiting interactive sign-in on first call.
+
+============================================================
+  Setup
+============================================================
+[2026-06-16 20:16:57.268] INFO    To sign in, use a web browser to open the page https://www.microsoft.com/link and enter the code HDB5ZBTB to authenticate.
+[2026-06-16 20:18:12.900] INFO    Resolved OneDrive (driveId: 4C5348B3D0CED6A4).
+[2026-06-16 20:18:14.764] OK      Created folder 'IntegrityLab'.
+
+============================================================
+  File: small-text.txt
+============================================================
+[2026-06-16 20:18:14.808] INFO    Original SHA-256: e646d5f945f1c0903ed6d1c5533cbe26cecff3f7714bed75e74833e78e8024a4
+[2026-06-16 20:18:14.824] STEP    Simple upload (<= 4 MB) to 'IntegrityLab/small-text.txt'.
+[2026-06-16 20:18:15.547] OK      Uploaded 'small-text.txt' (61 bytes) -> itemId 4C5348B3D0CED6A4!scad8d2a79da649448185824b14a4ea0b.
+[2026-06-16 20:18:15.547] INFO    Upload took 730 ms.
+[2026-06-16 20:18:15.548] STEP    Downloading itemId 4C5348B3D0CED6A4!scad8d2a79da649448185824b14a4ea0b -> 'downloads\small-text.txt'.
+[2026-06-16 20:18:16.657] OK      Downloaded to 'downloads\small-text.txt'.
+[2026-06-16 20:18:16.658] INFO    Download took 1111 ms.
+[2026-06-16 20:18:16.660] INFO    Downloaded SHA-256: e646d5f945f1c0903ed6d1c5533cbe26cecff3f7714bed75e74833e78e8024a4
+[2026-06-16 20:18:16.660] OK      Integrity verified: hashes match.
+
+============================================================
+  File: small-binary.bin
+============================================================
+[2026-06-16 20:18:16.669] INFO    Original SHA-256: 99ed23b7ca1ad0884016e6116ef8db22455dcd4440bcfc83c499fefe6f6fd538
+[2026-06-16 20:18:16.670] STEP    Simple upload (<= 4 MB) to 'IntegrityLab/small-binary.bin'.
+[2026-06-16 20:18:17.354] OK      Uploaded 'small-binary.bin' (1,024 bytes) -> itemId 4C5348B3D0CED6A4!s7faa258e4f314ab1a195e4bfcdb060c5.
+[2026-06-16 20:18:17.354] INFO    Upload took 684 ms.
+[2026-06-16 20:18:17.354] STEP    Downloading itemId 4C5348B3D0CED6A4!s7faa258e4f314ab1a195e4bfcdb060c5 -> 'downloads\small-binary.bin'.
+[2026-06-16 20:18:17.945] OK      Downloaded to 'downloads\small-binary.bin'.
+[2026-06-16 20:18:17.946] INFO    Download took 591 ms.
+[2026-06-16 20:18:17.948] INFO    Downloaded SHA-256: 99ed23b7ca1ad0884016e6116ef8db22455dcd4440bcfc83c499fefe6f6fd538
+[2026-06-16 20:18:17.948] OK      Integrity verified: hashes match.
+
+============================================================
+  File: large-binary.bin
+============================================================
+[2026-06-16 20:18:17.970] INFO    Original SHA-256: 929e2c46e407ea92b4d92adf32b1eb7f2d6ed8be6450a554d7380cfd73a0b052
+[2026-06-16 20:18:17.979] STEP    Resumable upload session (> 4 MB) to 'IntegrityLab/large-binary.bin'.
+[2026-06-16 20:19:02.185] OK      Uploaded 'large-binary.bin' (5,242,880 bytes) -> itemId 4C5348B3D0CED6A4!s174a01b57fe8417582566c24e857cb45.
+[2026-06-16 20:19:02.185] INFO    Upload took 44212 ms.
+[2026-06-16 20:19:02.185] STEP    Downloading itemId 4C5348B3D0CED6A4!s174a01b57fe8417582566c24e857cb45 -> 'downloads\large-binary.bin'.
+[2026-06-16 20:19:03.691] OK      Downloaded to 'downloads\large-binary.bin'.
+[2026-06-16 20:19:03.691] INFO    Download took 1505 ms.
+[2026-06-16 20:19:03.711] INFO    Downloaded SHA-256: 929e2c46e407ea92b4d92adf32b1eb7f2d6ed8be6450a554d7380cfd73a0b052
+[2026-06-16 20:19:03.711] OK      Integrity verified: hashes match.
+
+============================================================
+  Results Summary
+============================================================
+[2026-06-16 20:19:03.712] INFO    File                      Size (B)   Up (ms)  Down (ms)  Result
+[2026-06-16 20:19:03.713] INFO    small-text.txt                  61       730       1111  PASS
+[2026-06-16 20:19:03.713] INFO    small-binary.bin             1,024       684        591  PASS
+[2026-06-16 20:19:03.713] INFO    large-binary.bin         5,242,880     44212       1505  PASS
+[2026-06-16 20:19:03.713] INFO    
+3/3 files preserved integrity (bit-for-bit identical).

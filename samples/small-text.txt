@@ -1,0 +1,1 @@
+OneDrive integrity test — ascii + unicode (é, 中, 😀).
